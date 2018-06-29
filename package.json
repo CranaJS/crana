@@ -1,12 +1,12 @@
 {
   "name": "app-it",
-  "version": "1.0.0",
+  "version": "0.0.2",
   "description": "",
   "preferGlobal": true,
   "bin": "./index.js",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "publish": "git add . && git commit && npm publish"
   },
   "keywords": [],
   "author": "",

@@ -4,6 +4,7 @@
 Just do:
 
 ```bash
+npm i -g app-it
 app-it <projectName> [projectFolder]
 ```
 
