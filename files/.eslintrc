@@ -1,0 +1,31 @@
+{
+    "root": true,
+
+    "parser": "babel-eslint",
+  
+    "extends": [
+      "airbnb"
+    ],
+  
+    "env": {
+      "browser": true,
+      "node": true
+    },
+
+    "rules": {
+        "import/no-unresolved": 0,
+        "import/extensions": 0,
+        "import/prefer-default-export": 0,
+        "react/prop-types": 0,
+        "no-confusing-arrow": 0,
+        "react/sort-comp": 0,
+        "comma-dangle": 0,
+        "function-paren-newline": 0,
+        "jsx-a11y/label-has-for": 0,
+        "react/no-multi-comp": 0,
+        "import/no-extraneous-dependencies": 0,
+        "no-underscore-dangle": 0,
+        "no-debugger": 0,
+        "curly": [2, "multi-or-nest"]
+    }
+}
