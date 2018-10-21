@@ -2,8 +2,8 @@
     <img src="logo.png" width="300" />
 </div>
 
-# CReate A Node Application
-## A CLI tool to create React + Node apps with just one command
+# :sparkles: CReate A Node Application
+## :battery: A CLI tool to create React + Node apps with just one command (batteries included)
 
 :bulb: To get up and running with an application with a node.js backend and a React frontend, just execute:
 
@@ -17,49 +17,49 @@ crana <projectName> [projectFolder]
 This will equip you with all important tools you're going to need to develop powerful applications, for example __Live reaload__ for the server and the frontend out of the box.
 Webpack, Babel, ESLint, StyleLint, Nodemon etc. etc., all preconfigured out of the box, so that you can focus on the important stuff!
 
-__Now start developing!__
+:computer: __Now start developing!__
 ```bash
 crana dev
 ```
 This will fire up the backend and the frontend development server. Just edit files under __src__ and see what happens!
 
 ## Usage
+:star: Create a new crana project.
 ```bash
 crana init <projectName> [projectFolderName]
 ```
-Initialize a project.
+:dizzy: Concurrently starts the frontend and the backend in development mode.
 ```bash
 crana dev                                     
 ```
-Concurrently starts the frontend and the backend in development mode.
+:books: See how many LOC you've already written.
 ```bash
 crana count-lines                            
 ```
-See how many LOC you've already written.
+:mag: Executes eslint and styleling in autofix mode for your client files (src/client + src/shared).
 ```bash
 crana lint:client                             
 ```
-Executes eslint in autofix mode for your client files (src/client + src/shared).
+:mag: Executes eslint in autofix mode for your server files (src/server + src/shared).
 ```bash
 crana lint:server                             
 ```
-Executes eslint in autofix mode for your server files (src/server + src/shared).
+:satellite: Starts the webpack development server for the frontend.
 ```bash
 crana dev:client                              
 ```
-Starts the webpack development server for the frontend.
+:bar_chart: Starts the node.js backend in development mode with live-reload.
 ```bash
 crana dev:server                              
 ```
-Starts the node.js backend in development mode with live-reload.
+:car: Starts the node.js server for production.
 ```bash
 crana start                                   
 ```
-Starts the node.js server for production.
+:blue_car: Creates a production build for the frontend application.
 ```bash
 crana build:client                            
 ```
-Creates a production build for the frontend application.
 
 ## Project structure
 The interesting files for you are all located in the __src__ folder. The src folder has three subfolders:
@@ -79,7 +79,7 @@ As soon as you bootstrapped a new project, you have an application running with:
 
 Under the hood it uses Webpack, Babel, ESLint and StyleLint with a few other plugins enabling a powerful development workflow.
 
-## Constraints
+## Known constraints
 ### Windows Linux Subsystem
 If you're using Windows Linux Subsystem, eslint will not immediatly work. You need to edit the path under ".vscode/settings.json".
 Replace "C:/mnt/c" with "C:" and it should work.
