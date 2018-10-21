@@ -4,13 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "app-it dev",
-    "start": "app-it start"
+    "dev": "crana dev",
+    "start": "crana start"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "app-it": {
+  "crana": {
     "displayName": "{-- project-name --}",
     "aliases": {
       "@shared": "src/shared"

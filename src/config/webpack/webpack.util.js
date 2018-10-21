@@ -12,7 +12,7 @@ const PATHS = {
   shared: path.resolve(appRootPath, 'src/shared'),
   assets: path.resolve(appRootPath, 'assets'),
   root: appRootPath,
-  appItRoot: path.join(__dirname, '../../../')
+  cranaRoot: path.join(__dirname, '../../../')
 };
 
 function loadCSS({ use = [] }) {

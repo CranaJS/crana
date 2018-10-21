@@ -10,7 +10,7 @@ const {
 /* eslint-disable-next-line import/no-dynamic-require */
 const packageJSON = require(path.join(PATHS.root, 'package.json'));
 
-const { proxy, displayName, openBrowser } = packageJSON['app-it'];
+const { proxy, displayName, openBrowser } = packageJSON.crana;
 
 module.exports = function create() {
   const DEV_CONFIG = {
