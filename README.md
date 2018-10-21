@@ -26,6 +26,6 @@ If you're using Windows Linux Subsystem, eslint will not immediatly work. You ne
 Replace "C:/mnt/c" with "C:" and it should work.
 
 ## Roadmap
-- Scripts should be implemented internally: All dependencies should be installed internally. So updating isn't an issue anymore.
+- Write clear documentation
 - Use webpack for server too
 - Implement possiblity to add own "app.it" plugins
