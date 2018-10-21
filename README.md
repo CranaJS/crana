@@ -1,7 +1,7 @@
 # App.It
 ## A CLI tool to create React + Node apps with just one command
 
-Just do:
+Just execute:
 
 ```bash
 npm i -g app-it
@@ -13,12 +13,15 @@ app-it <projectName> [projectFolder]
 ## Technologies
 As soon as you bootstrapped a new Project, you have an application running with:
 
-- Node.js Backend (tranpiled by babel)
+- Node.js Backend
 - React for frontend
+
+## Constraints
+### Windows Linux Subsystem
+If you're using Windows Linux Subsystem, eslint will not immediatly work. You need to edit the path under ".vscode/settings.json".
+Replace "C:/mnt/c" with "C:" and it should work.
 
 ## Roadmap
 - Create better documentation
 - Use webpack for server too
-- Better decouple source folder from "app.it"
 - Implement possiblity to add own "app.it" plugins
-- Implement updating to a newer version of "app.it"

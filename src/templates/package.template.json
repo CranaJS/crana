@@ -4,83 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "client:dev": "npm run client:lint && cross-env BABEL_ENV=browser webpack-dev-server --config config/webpack.main.js --env.target browser --env.mode development",
-    "client:build": "cross-env BABEL_ENV=browser webpack --config config/webpack.main.js --env.target browser --env.mode production",
-    "client:lint": "eslint src/client/**/*.js* --fix && eslint src/shared/**/*.js* --fix && stylelint src/shared/**/*.css --fix && stylelint src/client/**/*.css --fix",
-    "server:dev": "cross-env APPIT_MODE=development cross-env BABEL_ENV=node nodemon",
-    "server:build": "npm run server:lint && cross-env BABEL_ENV=node babel src/server --out-dir build/server && cross-env BABEL_ENV=node babel src/shared --out-dir build/shared",
-    "server:lint": "eslint src/server --fix && eslint src/shared --fix",
-    "server:prod": "cross-env APPIT_MODE=production node build/server/start-serer.js",
-    "dev": "concurrently \"npm run client:dev\" \"npm run server:dev\"",
-    "start": "npm run server:prod",
-    "heroku:deploy": "npm run client:build && npm run server:build && git add . && git commit -m \"Rebuilt for deployment on Heroku.\" && git push heroku master",
-    "count-lines": "cloc . --exclude-dir=node_modules,.git,build --exclude-ext=json"
-  },
-  "nodemonConfig": {
-    "exec": "npm run server:lint && babel-node src/server/start-server.js",
-    "inspect": true,
-    "watch": [
-      "src/server"
-    ]
+    "dev": "app-it dev",
+    "start": "app-it start"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "devDependencies": {
-    "@babel/cli": "^7.0.0-beta.49",
-    "@babel/core": "^7.0.0-beta.49",
-    "@babel/node": "^7.0.0-beta.49",
-    "@babel/plugin-proposal-class-properties": "^7.0.0-beta.49",
-    "@babel/plugin-proposal-decorators": "^7.0.0-beta.49",
-    "@babel/plugin-syntax-dynamic-import": "^7.0.0-beta.49",
-    "@babel/preset-env": "^7.0.0-beta.49",
-    "@babel/preset-react": "^7.0.0-beta.49",
-    "babel-eslint": "^8.2.3",
-    "babel-loader": "^8.0.0-beta.3",
-    "clean-webpack-plugin": "^0.1.19",
-    "cloc": "^2.3.3",
-    "concurrently": "^3.5.1",
-    "cross-env": "^5.1.6",
-    "css-loader": "^0.28.11",
-    "cssnano": "^3.10.0",
-    "duplicate-package-checker-webpack-plugin": "^3.0.0",
-    "eslint": "^4.9.0",
-    "eslint-config-airbnb": "^16.1.0",
-    "eslint-loader": "^2.0.0",
-    "eslint-plugin-import": "^2.7.0",
-    "eslint-plugin-jsx-a11y": "^6.0.2",
-    "eslint-plugin-react": "^7.4.0",
-    "file-loader": "^1.1.11",
-    "friendly-errors-webpack-plugin": "^1.7.0",
-    "git-revision-webpack-plugin": "^3.0.3",
-    "glob": "^7.1.2",
-    "html-webpack-plugin": "^3.2.0",
-    "mini-css-extract-plugin": "^0.4.0",
-    "nodemon": "^1.17.5",
-    "optimize-css-assets-webpack-plugin": "^4.0.2",
-    "postcss-cssnext": "^3.1.0",
-    "postcss-loader": "^2.1.5",
-    "purify-css": "^1.2.5",
-    "purifycss-webpack": "^0.7.0",
-    "style-loader": "^0.21.0",
-    "stylelint": "^9.2.1",
-    "stylelint-config-standard": "^18.2.0",
-    "stylelint-webpack-plugin": "^0.10.5",
-    "uglifyjs-webpack-plugin": "^1.2.5",
-    "url-loader": "^1.0.1",
-    "webpack": "^4.10.2",
-    "webpack-bundle-analyzer": "^2.13.1",
-    "webpack-cli": "^2.1.4",
-    "webpack-dev-server": "^3.1.4",
-    "webpack-merge": "^4.1.2",
-    "webpack-notifier": "^1.6.0"
-  },
-  "dependencies": {
-    "module-alias": "^2.0.6",
-    "react": "^16.4.0",
-    "react-dom": "^16.4.0",
-    "babel-polyfill": "^6.26.0"
-  },
   "app-it": {
     "displayName": "{-- project-name --}",
     "aliases": {
@@ -89,5 +18,18 @@
   },
   "_moduleAliases": {
     "@shared": "src/shared"
+  },
+  "dependencies": {
+    "module-alias": "*",
+    "react": "*",
+    "react-dom": "*"
+  },
+  "devDependencies": {
+    "eslint": "^4.9.0",
+    "eslint-config-airbnb": "^16.1.0",
+    "eslint-plugin-import": "^2.7.0",
+    "eslint-plugin-jsx-a11y": "^6.0.2",
+    "eslint-plugin-react": "^7.4.0",
+    "babel-eslint": "^8.2.3"
   }
 }

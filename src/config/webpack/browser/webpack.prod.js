@@ -1,19 +1,18 @@
-const glob = require(`glob`);
-const webpack = require(`webpack`);
+const webpack = require('webpack');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const PurifyCSSPlugin = require("purifycss-webpack");
-const GitRevisionPlugin = require("git-revision-webpack-plugin");
-const UglifyWebpackPlugin = require("uglifyjs-webpack-plugin");
-const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
-const DuplicatePackageCheckerPlugin = require("duplicate-package-checker-webpack-plugin");
-const cssnano = require("cssnano");
+const GitRevisionPlugin = require('git-revision-webpack-plugin');
+const UglifyWebpackPlugin = require('uglifyjs-webpack-plugin');
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const DuplicatePackageCheckerPlugin = require('duplicate-package-checker-webpack-plugin');
+const cssnano = require('cssnano');
 
-const { PATHS, loadCSS, createAnalyzer, createLinter } = require(`../webpack.util.js`);
-const common = require(`./webpack.common`);
+const {
+  PATHS, loadCSS, createAnalyzer, createLinter
+} = require('../webpack.util.js');
 
 const PROD_CONFIG = {
-  mode: `production`,
+  mode: 'production',
   module: {
     rules: [
       createLinter(false),
@@ -23,7 +22,7 @@ const PROD_CONFIG = {
   plugins: [
     new CleanWebpackPlugin([PATHS.client.build], { root: process.cwd() }),
     new MiniCssExtractPlugin({
-      filename: "[name].[contenthash:4].css",
+      filename: '[name].[contenthash:4].css',
     }),
     new OptimizeCSSAssetsPlugin({
       cssProcessor: cssnano,
@@ -38,10 +37,10 @@ const PROD_CONFIG = {
       canPrint: false
     }),
     // PurifyCSS doesn't work with react-select for some reason :( fix that asap
-    //new PurifyCSSPlugin({
+    // new PurifyCSSPlugin({
     //  paths: glob.sync(`${PATHS.client.app}/**/*.js*`, { nodir: true}),
     //  purifyOptions: { whitelist: ['*leaflet*', '*Select*', '*react-select*'] }
-    //}),
+    // }),
     new webpack.BannerPlugin({
       banner: (new GitRevisionPlugin()).version()
     }),
@@ -51,15 +50,15 @@ const PROD_CONFIG = {
   ],
   optimization: {
     splitChunks: {
-      chunks: "initial"
+      chunks: 'initial'
     },
     minimizer: [new UglifyWebpackPlugin({ uglifyOptions: { compress: { drop_console: true } } })],
     runtimeChunk: {
-      name: "manifest"
+      name: 'manifest'
     }
   }
 };
 
 module.exports = function create() {
   return PROD_CONFIG;
-}
+};

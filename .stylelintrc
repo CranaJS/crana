@@ -3,5 +3,5 @@
   "rules": {
     "indentation": 4
   },
-  "ignorefiles": ["*.js", "*.jsx", "*.ts"]
+  "ignoreFiles": ["*.js", "*.jsx", "*.ts"]
 }
