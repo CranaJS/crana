@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom';
 
 import { helloWorld } from '@shared/util';
 
+import './index.css';
+
 ReactDOM.render(
   (
     <div>

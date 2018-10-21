@@ -1,13 +1,12 @@
-const merge = require(`webpack-merge`);
+const merge = require('webpack-merge');
 
-const createCommonBrowserConfig = require(`./browser/webpack.common.js`);
-const createDevBrowserConfig = require(`./browser/webpack.dev.js`);
-const createProdBrowserConfig = require(`./browser/webpack.prod.js`);
+const createCommonBrowserConfig = require('./browser/webpack.common.js');
+const createDevBrowserConfig = require('./browser/webpack.dev.js');
+const createProdBrowserConfig = require('./browser/webpack.prod.js');
 
 const commonBrowserConfig = createCommonBrowserConfig();
 
 module.exports = function createConfig({ target, mode }) {
-
   const configurations = {
     browser: {
       development: merge(commonBrowserConfig, createDevBrowserConfig()),
@@ -23,4 +22,4 @@ module.exports = function createConfig({ target, mode }) {
     throw new Error(`Mode "${mode}" for target "${target}" does not exist!`);
 
   return configuration;
-}
+};
