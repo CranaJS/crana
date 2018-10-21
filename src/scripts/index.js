@@ -51,7 +51,7 @@ function devServer() {
       ${appServer}/start-server.js
   `;
   lintServer();
-  execCmd(cmd, { async: true });
+  execCmd(cmd, { async: true, cwd: appRootPath });
 }
 
 function dev() {

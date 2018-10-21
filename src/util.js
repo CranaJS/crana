@@ -80,7 +80,7 @@ function prepareCmd(sanitizedCmd) {
   };
 }
 
-function execCmd(cmd, { async = false } = {}) {
+function execCmd(cmd, { async = false, cwd = packageRootPath } = {}) {
   if (async) {
     const sanitizedCmd = sanitizedCmdInput(cmd);
     // const allCmds = sanitizedCmd.split('&&').map(c => c.split('&')).flat();
@@ -89,14 +89,14 @@ function execCmd(cmd, { async = false } = {}) {
     childProcess.spawn(
       preparedCmd.cmd,
       preparedCmd.argv,
-      { cwd: packageRootPath, stdio: 'inherit' }
+      { cwd, stdio: 'inherit' }
     );
     return true;
   }
 
   childProcess.execSync(
     cmd,
-    { cwd: packageRootPath, stdio: 'inherit' }
+    { cwd, stdio: 'inherit' }
   );
   return true;
 }
