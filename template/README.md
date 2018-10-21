@@ -1,4 +1,4 @@
-# You awesome app
-## This app was create with AppIt
+# Your awesome app
+## This app was created with Crana
 
-Fill this file by yourself!
+Have fun hacking!

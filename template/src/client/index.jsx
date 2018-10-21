@@ -3,12 +3,16 @@ import ReactDOM from 'react-dom';
 
 import { helloWorld } from '@shared/util';
 
-import './index.css';
+import logo from './logo.png';
+
+import { logo as logoClass } from './index.css';
 
 ReactDOM.render(
   (
     <div>
-      <h1>It is easy: Just <b>app-it</b>!</h1>
+      <img src={logo} className={logoClass} alt="Crana - CReate A Node Application" />
+      <h1>CReate A Node Application</h1>
+      <h2>Have fun hacking!</h2>
       <p>{helloWorld('React App')}</p>
     </div>
   ), document.getElementById('app'),
