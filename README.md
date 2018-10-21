@@ -87,4 +87,4 @@ Replace "C:/mnt/c" with "C:" and it should work.
 ## Roadmap
 - Improve documentations
 - Use webpack for server too
-- Implement possiblity to add own "app.it" plugins
+- Implement possiblity to add own "crana" plugins
