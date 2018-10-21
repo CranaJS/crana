@@ -10,11 +10,15 @@ app-it <projectName> [projectFolder]
 
 ...and you are ready to go!
 
+It is going to install all needed dependencies and accordingly setup your project.
+
 ## Technologies
 As soon as you bootstrapped a new Project, you have an application running with:
 
 - Node.js Backend
 - React for frontend
+
+Under the hood it uses Webpack, Babel, ESLint and StyleLint with a few other plugins enabling a powerful development workflow.
 
 ## Constraints
 ### Windows Linux Subsystem
@@ -22,6 +26,6 @@ If you're using Windows Linux Subsystem, eslint will not immediatly work. You ne
 Replace "C:/mnt/c" with "C:" and it should work.
 
 ## Roadmap
-- Create better documentation
+- Scripts should be implemented internally: All dependencies should be installed internally. So updating isn't an issue anymore.
 - Use webpack for server too
 - Implement possiblity to add own "app.it" plugins
