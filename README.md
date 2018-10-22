@@ -86,10 +86,8 @@ Under the hood it uses Webpack, Babel, ESLint and StyleLint with a few other plu
 If you're using Windows Linux Subsystem, eslint will not immediatly work. You need to edit the path under ".vscode/settings.json".
 Replace "C:/mnt/c" with "C:" and it should work.
 
-## Roadmap
-- Improve documentation
-- Create a website
-- Developers should be able to customize every aspect of crana (directly customizing configurations per project)
-- Implement sort of a plugin system
-- Add deployment automations + deployment guides
-- Open an issue/start a pull request if you have more ideas!
+## Contributing
+Have a look at [CONTRIBUTING.md](CONTRIBUTING.md)
+
+## Code of conduct
+Have a look at [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)
