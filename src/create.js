@@ -29,6 +29,10 @@ async function create({ projectName, projectFolderName }) {
 
   // Install all dependencies
   setTimeout(() => {
+    // Create an empty git repo in crana package, as it needs to be a git repo,
+    // otherwise certain tools will not run
+    if (!fs.existsSync(path.join(packageRootPath, '.git')))
+      childProcess.execSync('git init . && git add . && git commit -m "Init."', { cwd: packageRootPath });
     childProcess.spawnSync('npm', ['install'], { cwd: pathToUse, stdio: 'inherit' });
     childProcess.execSync('git init . && git add . && git commit -m "Initialized app with crana!"', { cwd: pathToUse });
     console.log(colorize('Project was successfully created.').FgGreen());
