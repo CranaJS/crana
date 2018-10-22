@@ -21,6 +21,9 @@ async function create({ projectName, projectFolderName }) {
   const vscodeConfigTemplate = fs.readFileSync(path.resolve(__dirname, './templates/settings.template.json'));
   const vscodeConfig = replaceAll(vscodeConfigTemplate.toString(), '{-- eslintrcPath --}', path.join(packageRootPath, '.eslintrc'));
 
+  if (!fs.existsSync('.vscode'))
+    fs.mkdirSync('.vscode');
+
   fs.writeFileSync(path.join(pathToUse, '.vscode/settings.json'), vscodeConfig);
 
   // Install all dependencies
