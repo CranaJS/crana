@@ -23,6 +23,8 @@ crana dev
 ```
 This will fire up the backend and the frontend development server. Just edit files under __src__ and see what happens!
 
+:warning: Crana is in early stage of development and may not meet all your requirements. That's why contributions of any kind are highly appreciated, as the best tools are built by communities!
+
 ## Usage
 :star: Create a new crana project.
 ```bash
@@ -79,12 +81,15 @@ As soon as you bootstrapped a new project, you have an application running with:
 
 Under the hood it uses Webpack, Babel, ESLint and StyleLint with a few other plugins enabling a powerful development workflow.
 
-## Known constraints
+## Known constraints/issues
 ### Windows Linux Subsystem
 If you're using Windows Linux Subsystem, eslint will not immediatly work. You need to edit the path under ".vscode/settings.json".
 Replace "C:/mnt/c" with "C:" and it should work.
 
 ## Roadmap
-- Improve documentations
-- Use webpack for server too
-- Implement possiblity to add own "app.it" plugins
+- Improve documentation
+- Create a website
+- Developers should be able to customize every aspect of crana (directly customizing configurations per project)
+- Implement sort of a plugin system
+- Add deployment automations + deployment guides
+- Open an issue/start a pull request if you have more ideas!
