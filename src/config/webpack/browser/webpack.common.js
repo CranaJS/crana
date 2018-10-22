@@ -6,9 +6,9 @@ const { PATHS } = require('../webpack.util.js');
 /* eslint-disable-next-line import/no-dynamic-require */
 const packageJSON = require(path.join(PATHS.root, 'package.json'));
 /* eslint-disable-next-line import/no-dynamic-require */
-const babelrc = require(path.join(PATHS.appItRoot, 'babel.config.json'));
+const babelrc = require(path.join(PATHS.cranaRoot, 'babel.config.json'));
 
-const { aliases, displayName } = packageJSON['app-it'];
+const { aliases, displayName } = packageJSON.crana;
 
 const aliasObj = {};
 Object.keys(aliases).forEach((alias) => {
@@ -34,7 +34,7 @@ module.exports = function create() {
         template: path.join(PATHS.assets, 'index.html')
       }),
       new StyleLintPlugin({
-        configFile: path.join(PATHS.appItRoot, '.stylelintrc'),
+        configFile: path.join(PATHS.cranaRoot, '.stylelintrc'),
         context: PATHS.client.app,
         files: '**/*.css',
         fix: true

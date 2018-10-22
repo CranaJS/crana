@@ -10,4 +10,9 @@ body {
     padding: 0;
     font-family: 'Raleway', sans-serif;
     background: white;
+    text-align: center;
+}
+
+.logo {
+    width: 300px;
 }

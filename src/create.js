@@ -21,16 +21,19 @@ async function create({ projectName, projectFolderName }) {
   const vscodeConfigTemplate = fs.readFileSync(path.resolve(__dirname, './templates/settings.template.json'));
   const vscodeConfig = replaceAll(vscodeConfigTemplate.toString(), '{-- eslintrcPath --}', path.join(packageRootPath, '.eslintrc'));
 
+  if (!fs.existsSync('.vscode'))
+    fs.mkdirSync('.vscode');
+
   fs.writeFileSync(path.join(pathToUse, '.vscode/settings.json'), vscodeConfig);
 
   // Install all dependencies
   setTimeout(() => {
     childProcess.spawnSync('npm', ['install'], { cwd: pathToUse, stdio: 'inherit' });
-    childProcess.execSync('git init . && git add . && git commit -m "Initialized app with AppIt!"', { cwd: pathToUse });
+    childProcess.execSync('git init . && git add . && git commit -m "Initialized app with crana!"', { cwd: pathToUse });
     console.log(colorize('Project was successfully created.').FgGreen());
     console.log(colorize('To get started, execute:').FgCyan());
     console.log(colorize(`cd ${folderNameToUse}`).Underscore());
-    console.log(colorize('app-it dev').Underscore());
+    console.log(colorize('crana dev').Underscore());
   }, 300);
 }
 
