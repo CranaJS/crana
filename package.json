@@ -1,6 +1,6 @@
 {
   "name": "crana",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "",
   "preferGlobal": true,
   "bin": "./index.js",
