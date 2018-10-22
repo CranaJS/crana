@@ -1,7 +1,6 @@
 const webpack = require('webpack');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const GitRevisionPlugin = require('git-revision-webpack-plugin');
 const UglifyWebpackPlugin = require('uglifyjs-webpack-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const DuplicatePackageCheckerPlugin = require('duplicate-package-checker-webpack-plugin');
@@ -42,7 +41,7 @@ const PROD_CONFIG = {
     //  purifyOptions: { whitelist: ['*leaflet*', '*Select*', '*react-select*'] }
     // }),
     new webpack.BannerPlugin({
-      banner: (new GitRevisionPlugin()).version()
+      banner: 'filename:[name]'
     }),
     new DuplicatePackageCheckerPlugin(),
     new webpack.DefinePlugin({ 'process.env': { NODE_ENV: JSON.stringify('production') } }),
