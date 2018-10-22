@@ -48,6 +48,7 @@ function devServer() {
       --ext js,graphql
       --inspect
       --watch ${appServer}
+      --watch ${appShared}
       ${appServer}/start-server.js
   `;
   lintServer();

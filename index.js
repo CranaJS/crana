@@ -6,7 +6,7 @@ const { commands, preHook } = require('./src/scripts');
 const { log, colorize } = require('./src/util');
 
 program
-  .version('0.0.8')
+  .version('0.0.9')
   .description('Create client + server apps with one CLI command. Easy. Unobstrusive. Powerful.');
 
 program
