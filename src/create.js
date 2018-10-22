@@ -21,10 +21,11 @@ async function create({ projectName, projectFolderName }) {
   const vscodeConfigTemplate = fs.readFileSync(path.resolve(__dirname, './templates/settings.template.json'));
   const vscodeConfig = replaceAll(vscodeConfigTemplate.toString(), '{-- eslintrcPath --}', path.join(packageRootPath, '.eslintrc'));
 
-  if (!fs.existsSync('.vscode'))
-    fs.mkdirSync('.vscode');
+  const vscodeFolder = path.join(pathToUse, '.vscode');
+  if (!fs.existsSync(vscodeFolder))
+    fs.mkdirSync(vscodeFolder);
 
-  fs.writeFileSync(path.join(pathToUse, '.vscode/settings.json'), vscodeConfig);
+  fs.writeFileSync(path.join(vscodeFolder, 'settings.json'), vscodeConfig);
 
   // Install all dependencies
   setTimeout(() => {
