@@ -9,7 +9,7 @@
 
 ```bash
 npm i -g crana
-crana <projectName> [projectFolder]
+crana init <projectName> [projectFolder]
 ```
 
 ...and you are ready to go!
