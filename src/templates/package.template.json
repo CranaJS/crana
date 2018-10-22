@@ -22,7 +22,8 @@
   "dependencies": {
     "module-alias": "*",
     "react": "*",
-    "react-dom": "*"
+    "react-dom": "*",
+    "react-hot-loader": "^4.3.11"
   },
   "devDependencies": {
     "eslint": "^4.9.0",

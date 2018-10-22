@@ -1,12 +1,13 @@
 {
   "name": "crana",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "",
   "preferGlobal": true,
   "bin": "./index.js",
   "main": "index.js",
   "scripts": {
-    "publish": "git add . && git commit && npm publish"
+    "publish": "git add . && git commit && npm publish",
+    "local-pack": "npm pack && rm -rf ../crana-no-git && mkdir ../crana-no-git && mv *.tgz ../crana-no-git && cd ../crana-no-git && tar -xvf *.tgz && cp package/. . -r && rm -rf package/ && rm -rf *.tgz && npm i && sudo npm link"
   },
   "keywords": [],
   "author": "",
@@ -52,6 +53,7 @@
     "postcss-loader": "^2.1.5",
     "purify-css": "^1.2.5",
     "purifycss-webpack": "^0.7.0",
+    "react-hot-loader": "^4.3.11",
     "style-loader": "^0.21.0",
     "stylelint": "^9.2.1",
     "stylelint-config-standard": "^18.2.0",

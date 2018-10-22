@@ -11,6 +11,7 @@
         },
         "browser": {
             "plugins": [
+                "react-hot-loader/babel",
                 ["@babel/proposal-decorators", { "legacy": true }],
                 ["@babel/proposal-class-properties", { "loose": true }],
                 "@babel/syntax-dynamic-import"
