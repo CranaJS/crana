@@ -69,22 +69,22 @@ The interesting files for you are all located in the __src__ folder. The src fol
 - server
 - shared
 
-As you can immagine, the __client__ folder contains all files for the React frontend application and the __server__ folder all files for the node.js backend. The __shared__ folder contains code you would like to share between client and server. This as good place for e.g. utility functions, domain logic etc.
+As you can imagine, the __client__ folder contains all files for the React frontend application and the __server__ folder contains all files for the node.js backend. The __shared__ folder contains code you would like to share between client and server. This is a good place for e.g. utility functions, domain logic etc.
 
 Be aware that the server files are not transpiled and thus don't support certain features like ES6 imports. This also the reason why all code in the __shared__ folder must be executable with your current node.js version.
 
 ## Technologies
 As soon as you bootstrapped a new project, you have an application running with:
 
-- Node.js Backend
+- Node.js backend
 - React for frontend
 
 Under the hood it uses Webpack, Babel, ESLint and StyleLint with a few other plugins enabling a powerful development workflow.
 
 ## Known constraints/issues
 ### Windows Linux Subsystem
-If you're using Windows Linux Subsystem, eslint will not immediatly work. You need to edit the path under ".vscode/settings.json".
-Replace "C:/mnt/c" with "C:" and it should work.
+If you're using Windows Linux Subsystem, eslint will not immediatly work. You need to edit the path under `.vscode/settings.json`.
+Replace `C:/mnt/c` with `C:` and it should work.
 
 ## Contributing
 Have a look at [CONTRIBUTING.md](CONTRIBUTING.md)
