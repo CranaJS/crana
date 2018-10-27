@@ -5,8 +5,10 @@ const createProject = require('./src/create');
 const { commands, preHook } = require('./src/scripts');
 const { log, colorize } = require('./src/util');
 
+const { version } = require('./package.json');
+
 program
-  .version('0.0.9')
+  .version(version)
   .description('Create client + server apps with one CLI command. Easy. Unobstrusive. Powerful.');
 
 program
