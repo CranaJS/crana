@@ -1,5 +1,9 @@
+/* eslint-disable global-require */
+/* eslint-disable import/no-dynamic-require */
 const path = require('path');
-const { appRootPath } = require('../paths');
+const deepmerge = require('deepmerge');
+const { appRootPath, packageRootPath } = require('../paths');
+const fs = require('fs');
 
 /*
 {
@@ -16,11 +20,14 @@ const { appRootPath } = require('../paths');
 }
 */
 
+const eslintStandardConfig = JSON.parse(fs.readFileSync(path.resolve(packageRootPath, '.eslintrc')));
+
 const extensions = [];
 
 function setupExtension(extension) {
   const {
     name,
+    eslint,
     client: {
       webpack: { common, dev, prod },
       babel
@@ -36,6 +43,7 @@ function setupExtension(extension) {
   //    dynamically in the scope of Crana
   extensions.push({
     ...extension,
+    eslint: eslint ? path.resolve(appRootPath, eslint) : null,
     client: {
       webpack: {
         common: path.resolve(appRootPath, common),
@@ -45,17 +53,28 @@ function setupExtension(extension) {
       babel: path.resolve(appRootPath, babel)
     }
   });
+
+  // Merge all eslint configs into a new (temp) file: '.eslintrctemp'
+  const mergedEslintConfig = deepmerge.all([
+    eslintStandardConfig,
+    ...extensions
+      .map(ext => ext.eslint ? require(ext.eslint) : null)
+      .filter(config => config)
+  ]);
+
+  fs.writeFileSync(path.resolve(packageRootPath, '.eslintrctemp'), JSON.stringify(mergedEslintConfig));
 }
 
 setupExtension({
   name: 'test-plugin',
+  eslint: 'config/eslint.config.json',
   client: {
     webpack: {
       dev: 'config/webpack.dev.js',
       common: 'config/webpack.common.js',
       prod: 'config/webpack.prod.js'
     },
-    babel: 'config/babel.config.json'
+    babel: 'config/babel.config.json',
   }
 });
 

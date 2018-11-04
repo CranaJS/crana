@@ -137,5 +137,6 @@ module.exports = {
   execCmd,
   log,
   fileExists,
-  createEnvCmd
+  createEnvCmd,
+  readFile: promisify(fs.readFile)
 };

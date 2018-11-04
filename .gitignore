@@ -110,3 +110,6 @@ data/
 *.iml
 out
 gen
+
+# Generated, temporary eslint file
+.eslintrctemp

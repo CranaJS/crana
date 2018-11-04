@@ -9,14 +9,16 @@ const {
 
 const { getConfigurationsToAdd } = require('../extensions');
 
+const eslintConfigPath = `${packageRootPath}/.eslintrctemp`;
+
 function countLines() {
   return execCmd(`npx cloc ${appRootPath} --exclude-dir=node_modules,.git,build --exclude-ext=json`);
 }
 
 function lintClient() {
   // Execute linting in parallel
-  execCmd(`npx eslint ${appClient}/** --fix --config ${packageRootPath}/.eslintrc`, { async: true });
-  execCmd(`npx eslint ${appShared}/** --fix --config ${packageRootPath}/.eslintrc`, { async: true });
+  execCmd(`npx eslint ${appClient}/** --fix --config ${eslintConfigPath}`, { async: true });
+  execCmd(`npx eslint ${appShared}/** --fix --config ${eslintConfigPath}`, { async: true });
   execCmd(`npx stylelint ${appClient}/**/*.css --fix --config ${packageRootPath}/.stylelintrc`, { async: true });
   execCmd(`npx stylelint ${appShared}/**/*.css --fix --config ${packageRootPath}/.stylelintrc`, { async: true });
 }
@@ -40,8 +42,8 @@ function devClient() {
 }
 
 function lintServer() {
-  execCmd(`npx eslint ${appServer}/** --fix --config ${packageRootPath}/.eslintrc`, { async: true });
-  execCmd(`npx eslint ${appShared}/** --fix --config ${packageRootPath}/.eslintrc`, { async: true });
+  execCmd(`npx eslint ${appServer}/** --fix --config ${eslintConfigPath}`, { async: true });
+  execCmd(`npx eslint ${appShared}/** --fix --config ${eslintConfigPath}`, { async: true });
 }
 
 function devServer() {
