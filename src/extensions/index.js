@@ -47,16 +47,20 @@ function setupExtension(extension) {
   // Then, during the creation of all config files, the above specified files are required
   //    dynamically in the scope of Crana
 
+  function getPath(val) {
+    return val ? path.resolve(appRootPath, val) : null;
+  }
+
   extensions.push({
     ...extension,
-    eslint: eslint ? path.resolve(appRootPath, eslint) : null,
+    eslint: getPath(eslint),
     client: {
       webpack: {
-        common: path.resolve(appRootPath, common),
-        dev: path.resolve(appRootPath, dev),
-        prod: path.resolve(appRootPath, prod)
+        common: getPath(common),
+        dev: getPath(dev),
+        prod: getPath(prod)
       },
-      babel: path.resolve(appRootPath, babel)
+      babel: getPath(babel)
     }
   });
 
@@ -77,14 +81,17 @@ function setupExtension(extension) {
 function getConfigurationsToAdd() {
   // Concatenates all configuration files of the extensions
   // So you have one array of webpack configs to add, one array of babel configs etc...
+  function concatIfExists(arr, val) {
+    return val ? arr.concat(val) : arr;
+  }
   return extensions.reduce((acc, ext) => {
     let retObj = acc;
     if (ext.client && ext.client.webpack) {
       retObj = {
         ...retObj,
-        common: acc.common.concat(ext.client.webpack.common),
-        dev: acc.common.concat(ext.client.webpack.dev),
-        prod: acc.common.concat(ext.client.webpack.prod)
+        common: concatIfExists(acc.common, ext.client.webpack.common),
+        dev: concatIfExists(acc.dev, ext.client.webpack.dev),
+        prod: concatIfExists(acc.prod, ext.client.webpack.prod)
       };
     }
     if (ext.client && ext.client.babel) {

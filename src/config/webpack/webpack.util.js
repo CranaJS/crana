@@ -52,7 +52,7 @@ function createLinter(dev = true) {
     loader: 'eslint-loader',
     options: {
       fix: !dev,
-      configFile: path.join(packageRootPath, '.eslintrc')
+      configFile: path.join(packageRootPath, '.eslintrctemp')
     },
     include: [PATHS.client.app, PATHS.shared]
   };

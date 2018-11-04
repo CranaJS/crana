@@ -22,7 +22,7 @@ module.exports = function create({ additionalBabelConfigs }) {
   const babelConfigs = additionalBabelConfigs.map(configPath => require(configPath));
   const babelConfig = mergeBabelConfigs.all([babelrc, ...babelConfigs]);
   return {
-    entry: ['babel-polyfill', path.join(PATHS.client.app, 'index.jsx')],
+    entry: ['babel-polyfill', path.join(PATHS.client.app, 'index.js')],
     resolve: {
       extensions: ['.web.js', '.mjs', '.js', '.json', '.web.jsx', '.jsx'],
       alias: aliasObj

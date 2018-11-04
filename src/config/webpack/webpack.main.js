@@ -6,40 +6,50 @@ const createCommonBrowserConfig = require('./browser/webpack.common.js');
 const createDevBrowserConfig = require('./browser/webpack.dev.js');
 const createProdBrowserConfig = require('./browser/webpack.prod.js');
 
+const { PATHS } = require('./webpack.util.js');
+
 const configsToAdd = JSON.parse(process.env.ADD_CONFIGS);
 
-function mergeConfigs(configs) {
-  return configs
-    .map(configPath => require(configPath))
-    .reduce((acc, config) => merge(acc, config), {});
+function createConfigs(configs) {
+  if (!configs)
+    return [];
+  return configs.map((configPath) => {
+    const config = require(configPath);
+    if (typeof config === 'function')
+      return config(PATHS);
+    return config;
+  });
 }
+
+const configs = {
+  common: createConfigs(configsToAdd.common),
+  dev: createConfigs(configsToAdd.dev),
+  prod: createConfigs(configsToAdd.prod)
+};
 
 const commonBrowserConfig = createCommonBrowserConfig({
   additionalBabelConfigs: configsToAdd.babel
 });
 
-// Require all configs to add and merge them (those are the configs which come from the extensions)
-const configsToMerge = {
-  common: mergeConfigs(configsToAdd.common),
-  dev: mergeConfigs(configsToAdd.dev),
-  prod: mergeConfigs(configsToAdd.prod)
-};
+const finalDevConfig = merge([
+  ...configs.common,
+  ...configs.dev,
+  commonBrowserConfig,
+  createDevBrowserConfig()
+]);
+
+const finalProdConfig = merge([
+  ...configs.common,
+  ...configs.prod,
+  commonBrowserConfig,
+  createProdBrowserConfig()
+]);
 
 module.exports = function createConfig({ target, mode }) {
   const configurations = {
     browser: {
-      development: merge(
-        configsToMerge.common,
-        configsToMerge.dev,
-        commonBrowserConfig,
-        createDevBrowserConfig()
-      ),
-      production: merge(
-        configsToMerge.common,
-        configsToMerge.prod,
-        commonBrowserConfig,
-        createProdBrowserConfig()
-      )
+      development: finalDevConfig,
+      production: finalProdConfig
     }
   };
 

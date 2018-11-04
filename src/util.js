@@ -155,10 +155,17 @@ function recursivelySearchObject(obj, { key, value }) {
 
 function installIfNotExists(packageName, version) {
   // Install an npm package if it wasn't installed
-  const packageJSON = require(path.resolve(packageRootPath, 'package.json'));
+  /* const packageJSON = require(path.resolve(packageRootPath, 'package.json'));
   const isPackageInstalled = recursivelySearchObject(
     packageJSON, { key: packageName, value: version }
-  );
+  ); */
+  let isPackageInstalled = false;
+  try {
+    require(packageName);
+    isPackageInstalled = true;
+  } catch (e) {
+    isPackageInstalled = false;
+  }
 
   if (!isPackageInstalled)
     execCmd(`npm i -S ${packageName}@${version}`, { cwd: packageRootPath, async: false });

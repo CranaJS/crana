@@ -1,5 +1,7 @@
 const path = require('path');
+const { promisify } = require('util');
 const chokidar = require('chokidar');
+const { subdirs: subdirsCb } = require('node-dir');
 
 const { execCmd, fileExists, createEnvCmd } = require('../util');
 
@@ -9,18 +11,24 @@ const {
 
 const { getConfigurationsToAdd, getAllServerCommands } = require('../extensions');
 
+const readSubdirs = promisify(subdirsCb);
+
 const eslintConfigPath = `${packageRootPath}/.eslintrctemp`;
 
 function countLines() {
   return execCmd(`npx cloc ${appRootPath} --exclude-dir=node_modules,.git,build --exclude-ext=json`);
 }
 
-function lintClient() {
+async function lintClient() {
   // Execute linting in parallel
-  execCmd(`npx eslint ${appClient}/** --fix --config ${eslintConfigPath}`, { async: true });
-  execCmd(`npx eslint ${appShared}/** --fix --config ${eslintConfigPath}`, { async: true });
-  execCmd(`npx stylelint ${appClient}/**/*.css --fix --config ${packageRootPath}/.stylelintrc`, { async: true });
-  execCmd(`npx stylelint ${appShared}/**/*.css --fix --config ${packageRootPath}/.stylelintrc`, { async: true });
+  // Recursively go through all client dirs and lint them
+  // Globbing doesn't seem to work with eslint
+  const dirs = [...await readSubdirs(appClient), ...await readSubdirs(appShared)];
+
+  dirs.forEach((dir) => {
+    execCmd(`npx eslint ${dir}/**/*.js --fix --config ${eslintConfigPath}`, { async: true });
+    execCmd(`npx stylelint ${dir}/**/*.css --fix --config ${packageRootPath}/.stylelintrc`, { async: true });
+  });
 }
 
 function devClient() {
@@ -41,9 +49,11 @@ function devClient() {
   execCmd(cmd, { async: true });
 }
 
-function lintServer() {
-  execCmd(`npx eslint ${appServer}/** --fix --config ${eslintConfigPath}`, { async: true });
-  execCmd(`npx eslint ${appShared}/** --fix --config ${eslintConfigPath}`, { async: true });
+async function lintServer() {
+  const dirs = [...await readSubdirs(appServer), ...await readSubdirs(appShared)];
+  dirs.forEach((dir) => {
+    execCmd(`npx eslint ${dir}/**/*.js --fix --config ${eslintConfigPath}`, { async: true });
+  });
 }
 
 function devServer() {
