@@ -1,4 +1,6 @@
 const path = require('path');
+const chokidar = require('chokidar');
+
 const { execCmd, fileExists } = require('../util');
 
 const {
@@ -36,23 +38,20 @@ function devClient() {
 }
 
 function lintServer() {
-  execCmd(`npx eslint ${appServer} --fix`, { async: true });
-  execCmd(`npx eslint ${appShared} --fix`, { async: true });
+  execCmd(`npx eslint ${appServer}/** --config ${packageRootPath}/.eslintrc --fix`, { async: false });
+  execCmd(`npx eslint ${appShared}/** --config ${packageRootPath}/.eslintrc --fix`, { async: false });
 }
 
 function devServer() {
   const cmd = `
     npx cross-env CRANA_MODE=development
     npx cross-env BABEL_ENV=node
-    npx nodemon
-      --ext js,graphql
-      --inspect
-      --watch ${appServer}
-      --watch ${appShared}
-      ${appServer}/start-server.js
+    node ${appServer}/start-server.js --inspect
   `;
-  lintServer();
-  execCmd(cmd, { async: true });
+  chokidar.watch([appServer, appShared], { ignored: /(^|[/\\])\../ }).on('change', () => {
+    execCmd(cmd, { async: true, cwd: appRootPath });
+    lintServer();
+  });
 }
 
 function dev() {
