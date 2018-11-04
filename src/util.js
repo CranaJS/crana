@@ -89,7 +89,7 @@ function execCmd(cmd, { async = false, cwd = packageRootPath } = {}) {
     childProcess.spawn(
       preparedCmd.cmd,
       preparedCmd.argv,
-      { cwd, stdio: 'inherit' }
+      { cwd, stdio: 'inherit', shell: true }
     );
     return true;
   }
