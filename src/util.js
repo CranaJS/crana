@@ -1,7 +1,10 @@
+/* eslint-disable global-require */
+/* eslint-disable import/no-dynamic-require */
 const { ncp } = require('ncp');
 
 const childProcess = require('child_process');
 const fs = require('fs');
+const path = require('path');
 const { promisify } = require('util');
 
 const fileStats = promisify(fs.stat);
@@ -114,9 +117,9 @@ function log({ text, type }) {
   }
 }
 
-async function fileExists(path) {
+async function fileExists(pathToCheck) {
   try {
-    const stats = await fileStats(path);
+    const stats = await fileStats(pathToCheck);
     return stats.isFile();
   } catch (e) {
     return false;
@@ -130,6 +133,37 @@ function createEnvCmd(env, cmd) {
   `;
 }
 
+function recursivelySearchObject(obj, { key, value }) {
+  // Searches all object properties until it finds the specified key/value pair
+  let wasFound = false;
+  const keys = Object.keys(obj);
+  for (let i = 0; i < keys.length; i += 1) {
+    const currentKey = keys[i];
+    if (currentKey === key && obj[currentKey] === value) {
+      wasFound = true;
+      break;
+    }
+    if (typeof obj[currentKey] === 'object') {
+      wasFound = recursivelySearchObject(obj[currentKey], { key, value });
+      if (wasFound)
+        break;
+    }
+  }
+
+  return wasFound;
+}
+
+function installIfNotExists(packageName, version) {
+  // Install an npm package if it wasn't installed
+  const packageJSON = require(path.resolve(packageRootPath, 'package.json'));
+  const isPackageInstalled = recursivelySearchObject(
+    packageJSON, { key: packageName, value: version }
+  );
+
+  if (!isPackageInstalled)
+    execCmd(`npm i -S ${packageName}@${version}`, { cwd: packageRootPath, async: false });
+}
+
 module.exports = {
   copyDir,
   replaceAll,
@@ -138,5 +172,6 @@ module.exports = {
   log,
   fileExists,
   createEnvCmd,
-  readFile: promisify(fs.readFile)
+  readFile: promisify(fs.readFile),
+  installIfNotExists
 };

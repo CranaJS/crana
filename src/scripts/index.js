@@ -7,7 +7,7 @@ const {
   appRootPath, appShared, appClient, packageRootPath, appServer
 } = require('../paths');
 
-const { getConfigurationsToAdd } = require('../extensions');
+const { getConfigurationsToAdd, getAllServerCommands } = require('../extensions');
 
 const eslintConfigPath = `${packageRootPath}/.eslintrctemp`;
 
@@ -47,20 +47,35 @@ function lintServer() {
 }
 
 function devServer() {
-  const cmd = `
-    npx cross-env CRANA_MODE=development
-    npx cross-env BABEL_ENV=node
-    node ${appServer}/start-server.js --inspect
-  `;
+  const cmd = createEnvCmd(
+    { CRANA_MODE: 'development', BABEL_ENV: 'node' },
+    `
+      node ${appServer}/start-server.js --inspect
+    `
+  );
 
-  let subProc = null;
+  let subProcs = [];
+
+  const { startDev } = getAllServerCommands();
 
   function onChange() {
-    if (subProc)
-      subProc.kill();
+    if (subProcs.length > 0) {
+      subProcs.forEach(proc => proc.kill());
+      subProcs = [];
+    }
     lintServer();
-    subProc = execCmd(cmd, { async: true, cwd: appRootPath });
+    if (startDev.length === 0) // No extension registered a cusom startDev handler
+      subProcs = [execCmd(cmd, { async: true, cwd: appRootPath })];
+    else {
+      startDev.forEach((startDevCmd) => {
+        const cmdToExecute = createEnvCmd({ CRANA_MODE: 'development', BABEL_ENV: 'node' }, `npx ${startDevCmd}`);
+        subProcs.push(
+          execCmd(cmdToExecute, { async: true })
+        );
+      });
+    }
   }
+
   chokidar.watch([appServer, appShared], { ignored: /(^|[/\\])\../ }).on('change', onChange);
   onChange();
 }
@@ -86,9 +101,27 @@ function buildClient() {
   execCmd(cmd, { async: true });
 }
 
+function buildServer() {
+  const { build } = getAllServerCommands();
+  if (build.length === 0)
+    console.error('No extension specified a build command. Maybe you do not need to build/compile your server files.');
+  else {
+    build.forEach((buildCmd) => {
+      execCmd(`npx ${buildCmd}`);
+    });
+  }
+}
+
 function start() {
-  const cmd = `node ${appServer}/start-server.js`;
-  execCmd(cmd, { async: true });
+  const { startProd } = getAllServerCommands();
+  if (startProd.length === 0) {
+    const cmd = `node ${appServer}/start-server.js`;
+    execCmd(cmd, { async: true });
+  } else {
+    startProd.forEach((prodCmd) => {
+      execCmd(`npx ${prodCmd}`, { async: true });
+    });
+  }
 }
 
 const commands = [
@@ -131,6 +164,11 @@ const commands = [
     name: 'build:client',
     fn: buildClient,
     description: 'Creates a production build for the frontend application.'
+  },
+  {
+    name: 'build:server',
+    fn: buildServer,
+    description: 'If you are using any extensions which uses a compiler or similar tools, files can be compiled/built with this command.'
   }
 ];
 

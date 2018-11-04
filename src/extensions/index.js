@@ -2,9 +2,15 @@
 /* eslint-disable import/no-dynamic-require */
 const path = require('path');
 const deepmerge = require('deepmerge');
-const { appRootPath, packageRootPath } = require('../paths');
+const {
+  appRootPath,
+  packageRootPath,
+  appServer,
+  appShared
+} = require('../paths');
 const fs = require('fs');
 
+const { installIfNotExists, fileExists } = require('../util');
 /*
 {
   name,
@@ -26,7 +32,6 @@ const extensions = [];
 
 function setupExtension(extension) {
   const {
-    name,
     eslint,
     client: {
       webpack: { common, dev, prod },
@@ -41,6 +46,7 @@ function setupExtension(extension) {
   // First step needs to be: Install all dependencies in the scope of the local Crana package
   // Then, during the creation of all config files, the above specified files are required
   //    dynamically in the scope of Crana
+
   extensions.push({
     ...extension,
     eslint: eslint ? path.resolve(appRootPath, eslint) : null,
@@ -63,20 +69,10 @@ function setupExtension(extension) {
   ]);
 
   fs.writeFileSync(path.resolve(packageRootPath, '.eslintrctemp'), JSON.stringify(mergedEslintConfig));
-}
 
-setupExtension({
-  name: 'test-plugin',
-  eslint: 'config/eslint.config.json',
-  client: {
-    webpack: {
-      dev: 'config/webpack.dev.js',
-      common: 'config/webpack.common.js',
-      prod: 'config/webpack.prod.js'
-    },
-    babel: 'config/babel.config.json',
-  }
-});
+  // Install dependencies
+  Object.keys(cranaDependencies).forEach(key => installIfNotExists(key, cranaDependencies[key]));
+}
 
 function getConfigurationsToAdd() {
   // Concatenates all configuration files of the extensions
@@ -106,8 +102,49 @@ function getConfigurationsToAdd() {
   });
 }
 
+function getAllServerCommands() {
+  // Returns an array of all commands related to the server
+  // They are then executed sequentially
+  const allCommands = extensions.reduce((acc, ext) => {
+    if (ext.server) {
+      return {
+        startDev: ext.server.startDev ?
+          acc.startDev.concat(ext.server.startDev) : acc.startDev,
+        startProd: ext.server.startProd ?
+          acc.startProd.concat(ext.server.startProd) : acc.startProd,
+        build: ext.server.build ?
+          acc.build.concat(ext.server.build) : acc.build
+      };
+    }
+    return acc;
+  }, {
+    startDev: [], // Executed in parallel
+    startProd: [], // Executed in parallel
+    build: [] // Executed sequentially
+  });
+
+  return {
+    startDev: allCommands.startDev.map(cmd => cmd({ appServer, appShared, appRootPath })),
+    startProd: allCommands.startProd.map(cmd => cmd({ appServer, appShared, appRootPath })),
+    build: allCommands.build.map(cmd => cmd({ appServer, appShared, appRootPath }))
+  };
+}
+
+async function initLocalExtension() {
+  // If in the root of the project a 'crana.extend.js' file exists, install it as an extension
+  const filePath = path.resolve(appRootPath, 'crana.extend.js');
+  const exists = await fileExists(filePath);
+  if (!exists)
+    return;
+  const localExtension = require(filePath);
+  setupExtension(localExtension);
+}
+
+initLocalExtension();
+
 module.exports = {
   setupExtension,
   extensions,
-  getConfigurationsToAdd
+  getConfigurationsToAdd,
+  getAllServerCommands
 };
