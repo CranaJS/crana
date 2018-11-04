@@ -48,10 +48,17 @@ function devServer() {
     npx cross-env BABEL_ENV=node
     node ${appServer}/start-server.js --inspect
   `;
-  chokidar.watch([appServer, appShared], { ignored: /(^|[/\\])\../ }).on('change', () => {
-    execCmd(cmd, { async: true, cwd: appRootPath });
+
+  let subProc = null;
+
+  function onChange() {
+    if (subProc)
+      subProc.kill();
     lintServer();
-  });
+    subProc = execCmd(cmd, { async: true, cwd: appRootPath });
+  }
+  chokidar.watch([appServer, appShared], { ignored: /(^|[/\\])\../ }).on('change', onChange);
+  onChange();
 }
 
 function dev() {

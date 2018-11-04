@@ -86,19 +86,17 @@ function execCmd(cmd, { async = false, cwd = packageRootPath } = {}) {
     // const allCmds = sanitizedCmd.split('&&').map(c => c.split('&')).flat();
 
     const preparedCmd = prepareCmd(sanitizedCmd);
-    childProcess.spawn(
+    return childProcess.spawn(
       preparedCmd.cmd,
       preparedCmd.argv,
       { cwd, stdio: 'inherit', shell: true }
     );
-    return true;
   }
 
-  childProcess.execSync(
+  return childProcess.execSync(
     cmd,
     { cwd, stdio: 'inherit' }
   );
-  return true;
 }
 
 function log({ text, type }) {
