@@ -1,11 +1,13 @@
 const path = require('path');
 const chokidar = require('chokidar');
 
-const { execCmd, fileExists } = require('../util');
+const { execCmd, fileExists, createEnvCmd } = require('../util');
 
 const {
   appRootPath, appShared, appClient, packageRootPath, appServer
 } = require('../paths');
+
+const { getConfigurationsToAdd } = require('../extensions');
 
 function countLines() {
   return execCmd(`npx cloc ${appRootPath} --exclude-dir=node_modules,.git,build --exclude-ext=json`);
@@ -22,18 +24,18 @@ function lintClient() {
 function devClient() {
   // First autofix all via linting
   lintClient();
-  const cmd = `
-        npx cross-env
-            BABEL_ENV=browser
-            npx cross-env
-              APP_ROOT=${appRootPath}
-                npx cross-env
-                  APP_IT_ROOT=${packageRootPath}
-                    npx webpack-dev-server
-                        --config ${packageRootPath}/src/config/webpack/webpack.main.js
-                        --env.target browser
-                        --env.mode development
-    `;
+  const cmd = createEnvCmd(
+    {
+      BABEL_ENV: 'browser',
+      APP_ROOT: appRootPath,
+      APP_IT_ROOT: packageRootPath,
+      ADD_CONFIGS: JSON.stringify(getConfigurationsToAdd()) // Extensions
+    },
+    `npx webpack-dev-server
+    --config ${packageRootPath}/src/config/webpack/webpack.main.js
+    --env.target browser
+    --env.mode development`
+  );
   execCmd(cmd, { async: true });
 }
 

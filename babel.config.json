@@ -1,29 +1,14 @@
 {
-    "env": {
-        "node": {
-            "presets": [
-                ["@babel/env" , {
-                    "targets": {
-                      "node": "current"
-                    }
-                }]
-            ]
-        },
-        "browser": {
-            "plugins": [
-                "react-hot-loader/babel",
-                ["@babel/proposal-decorators", { "legacy": true }],
-                ["@babel/proposal-class-properties", { "loose": true }],
-                "@babel/syntax-dynamic-import"
-            ],
-            "presets": [
-                [
-                    "@babel/env", {
-                        "modules": false
-                    }
-                ],
-                "@babel/react"
-            ]
-        }
-    }
+    "plugins": [
+        ["@babel/proposal-decorators", { "legacy": true }],
+        ["@babel/proposal-class-properties", { "loose": true }],
+        "@babel/syntax-dynamic-import"
+    ],
+    "presets": [
+        [
+            "@babel/env", {
+                "modules": false
+            }
+        ]
+    ]
 }

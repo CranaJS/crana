@@ -1,6 +1,9 @@
+/* eslint-disable global-require */
+/* eslint-disable import/no-dynamic-require */
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const StyleLintPlugin = require('stylelint-webpack-plugin');
 const path = require('path');
+const mergeBabelConfigs = require('babel-merge');
 const { PATHS } = require('../webpack.util.js');
 
 /* eslint-disable-next-line import/no-dynamic-require */
@@ -15,7 +18,9 @@ Object.keys(aliases).forEach((alias) => {
   aliasObj[alias] = path.join(PATHS.root, aliases[alias]);
 });
 
-module.exports = function create() {
+module.exports = function create({ additionalBabelConfigs }) {
+  const babelConfigs = additionalBabelConfigs.map(configPath => require(configPath));
+  const babelConfig = mergeBabelConfigs.all([babelrc, ...babelConfigs]);
   return {
     entry: ['babel-polyfill', path.join(PATHS.client.app, 'index.jsx')],
     resolve: {
@@ -46,7 +51,7 @@ module.exports = function create() {
           test: [/\.js$/, /\.jsx$/],
           use: {
             loader: 'babel-loader',
-            options: babelrc
+            options: babelConfig
           },
           include: [PATHS.client.app, PATHS.shared]
         },

@@ -123,11 +123,19 @@ async function fileExists(path) {
   }
 }
 
+function createEnvCmd(env, cmd) {
+  // Sets all specified environment variables for the specified cmd
+  return `
+    ${Object.keys(env).reduce((acc, key) => `npx cross-env ${key}='${env[key]}' ${acc}`, '')} ${cmd}
+  `;
+}
+
 module.exports = {
   copyDir,
   replaceAll,
   colorize,
   execCmd,
   log,
-  fileExists
+  fileExists,
+  createEnvCmd
 };
