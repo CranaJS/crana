@@ -66,7 +66,7 @@ function devServer() {
 
   let subProcs = [];
 
-  const { startDev } = getAllServerCommands();
+  const { startDev, liveReload } = getAllServerCommands();
 
   function onChange() {
     if (subProcs.length > 0) {
@@ -78,15 +78,24 @@ function devServer() {
       subProcs = [execCmd(cmd, { async: true, cwd: appRootPath })];
     else {
       startDev.forEach((startDevCmd) => {
-        const cmdToExecute = createEnvCmd({ CRANA_MODE: 'development', BABEL_ENV: 'node' }, `npx ${startDevCmd}`);
+        let cmdStr = startDevCmd;
+        let cwd = null;
+        if (startDevCmd.cmd) {
+          cmdStr = startDevCmd.cmd;
+          if (startDevCmd.cwd === 'app')
+            cwd = appRootPath;
+        }
+        const cmdToExecute = createEnvCmd({ CRANA_MODE: 'development', BABEL_ENV: 'node' }, `npx ${cmdStr}`);
+
         subProcs.push(
-          execCmd(cmdToExecute, { async: true })
+          execCmd(cmdToExecute, { async: true, cwd })
         );
       });
     }
   }
 
-  chokidar.watch([appServer, appShared], { ignored: /(^|[/\\])\../ }).on('change', onChange);
+  if (liveReload)
+    chokidar.watch([appServer, appShared], { ignored: /(^|[/\\])\../ }).on('change', onChange);
   onChange();
 }
 

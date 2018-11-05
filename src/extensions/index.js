@@ -133,6 +133,7 @@ function getAllServerCommands() {
   });
 
   return {
+    liveReload: !extensions.find(ext => ext.server && ext.server.liveReload === false),
     startDev: allCommands.startDev.map(cmd => cmd({ appServer, appShared, appRootPath })),
     startProd: allCommands.startProd.map(cmd => cmd({ appServer, appShared, appRootPath })),
     build: allCommands.build.map(cmd => cmd({ appServer, appShared, appRootPath }))
