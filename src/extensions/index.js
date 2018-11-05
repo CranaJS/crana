@@ -10,7 +10,7 @@ const {
 } = require('../paths');
 const fs = require('fs');
 
-const { installIfNotExists, fileExists } = require('../util');
+const { installIfNotExists, fileExists, getProperty } = require('../util');
 /*
 {
   name,
@@ -33,10 +33,6 @@ const extensions = [];
 function setupExtension(extension) {
   const {
     eslint,
-    client: {
-      webpack: { common, dev, prod },
-      babel
-    },
     dependencies: cranaDependencies
   } = extension;
   // All parameters above are paths to '.js' files exporting
@@ -50,6 +46,11 @@ function setupExtension(extension) {
   function getPath(val) {
     return val ? path.resolve(appRootPath, val) : null;
   }
+
+  const babel = getProperty(extension, 'client.babel', null);
+  const common = getProperty(extension, 'client.webpack.common');
+  const dev = getProperty(extension, 'client.webpack.dev');
+  const prod = getProperty(extension, 'client.webpack.prod');
 
   extensions.push({
     ...extension,
@@ -75,7 +76,8 @@ function setupExtension(extension) {
   fs.writeFileSync(path.resolve(packageRootPath, '.eslintrctemp'), JSON.stringify(mergedEslintConfig));
 
   // Install dependencies
-  Object.keys(cranaDependencies).forEach(key => installIfNotExists(key, cranaDependencies[key]));
+  if (cranaDependencies)
+    Object.keys(cranaDependencies).forEach(key => installIfNotExists(key, cranaDependencies[key]));
 }
 
 function getConfigurationsToAdd() {

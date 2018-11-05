@@ -4,7 +4,6 @@ const { ncp } = require('ncp');
 
 const childProcess = require('child_process');
 const fs = require('fs');
-const path = require('path');
 const { promisify } = require('util');
 
 const fileStats = promisify(fs.stat);
@@ -133,25 +132,24 @@ function createEnvCmd(env, cmd) {
   `;
 }
 
-function recursivelySearchObject(obj, { key, value }) {
-  // Searches all object properties until it finds the specified key/value pair
-  let wasFound = false;
-  const keys = Object.keys(obj);
-  for (let i = 0; i < keys.length; i += 1) {
-    const currentKey = keys[i];
-    if (currentKey === key && obj[currentKey] === value) {
-      wasFound = true;
-      break;
-    }
-    if (typeof obj[currentKey] === 'object') {
-      wasFound = recursivelySearchObject(obj[currentKey], { key, value });
-      if (wasFound)
-        break;
-    }
+function getProperty(obj, propPath, defaultValue = '') {
+  // Gets property of an object at the specified path or return a default value
+  const splitted = propPath.split('.');
+  if (splitted.length === 1) {
+    const val = obj[propPath];
+    if (val === undefined || val === null)
+      return defaultValue;
+    return val;
   }
 
-  return wasFound;
+  const nextProp = splitted[0];
+  const nextVal = obj[nextProp];
+  if (nextVal === null || nextVal === undefined)
+    return defaultValue;
+  const newPath = splitted.slice(1, splitted.length).join('.');
+  return getProperty(nextVal, newPath, defaultValue);
 }
+
 
 function installIfNotExists(packageName, version) {
   // Install an npm package if it wasn't installed
@@ -180,5 +178,6 @@ module.exports = {
   fileExists,
   createEnvCmd,
   readFile: promisify(fs.readFile),
-  installIfNotExists
+  installIfNotExists,
+  getProperty
 };
