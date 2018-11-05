@@ -23,11 +23,16 @@ async function lintClient() {
   // Execute linting in parallel
   // Recursively go through all client dirs and lint them
   // Globbing doesn't seem to work with eslint
-  const dirs = [...await readSubdirs(appClient), ...await readSubdirs(appShared)];
+  const dirs = [
+    ...await readSubdirs(appClient),
+    ...await readSubdirs(appShared),
+    appClient,
+    appShared
+  ];
 
   dirs.forEach((dir) => {
-    execCmd(`npx eslint ${dir}/**/*.js --fix --config ${eslintConfigPath}`, { async: true });
-    execCmd(`npx stylelint ${dir}/**/*.css --fix --config ${packageRootPath}/.stylelintrc`, { async: true });
+    execCmd(`npx eslint ${dir}/*.js --fix --config ${eslintConfigPath}`, { async: true });
+    execCmd(`npx stylelint ${dir}/*.css --fix --config ${packageRootPath}/.stylelintrc`, { async: true });
   });
 }
 
@@ -50,9 +55,14 @@ function devClient() {
 }
 
 async function lintServer() {
-  const dirs = [...await readSubdirs(appServer), ...await readSubdirs(appShared)];
+  const dirs = [
+    ...await readSubdirs(appServer),
+    ...await readSubdirs(appShared),
+    appServer,
+    appShared
+  ];
   dirs.forEach((dir) => {
-    execCmd(`npx eslint ${dir}/**/*.js --fix --config ${eslintConfigPath}`, { async: true });
+    execCmd(`npx eslint ${dir}/*.js --fix --config ${eslintConfigPath}`, { async: true });
   });
 }
 
@@ -66,7 +76,7 @@ function devServer() {
 
   let subProcs = [];
 
-  const { startDev, liveReload } = getAllServerCommands();
+  const { startDev } = getAllServerCommands();
 
   function onChange() {
     if (subProcs.length > 0) {
@@ -86,16 +96,23 @@ function devServer() {
             cwd = appRootPath;
         }
         const cmdToExecute = createEnvCmd({ CRANA_MODE: 'development', BABEL_ENV: 'node' }, `npx ${cmdStr}`);
+        const shouldExec = startDevCmd.liveReload !== undefined &&
+          startDevCmd.liveReload !== null &&
+          startDevCmd.liveReload === false &&
+          !startDevCmd.wasExecuted;
 
-        subProcs.push(
-          execCmd(cmdToExecute, { async: true, cwd })
-        );
+        if (shouldExec) {
+          /* eslint-disable-next-line no-param-reassign */
+          startDevCmd.wasExecuted = true;
+          subProcs.push(
+            execCmd(cmdToExecute, { async: true, cwd })
+          );
+        }
       });
     }
   }
 
-  if (liveReload)
-    chokidar.watch([appServer, appShared], { ignored: /(^|[/\\])\../ }).on('change', onChange);
+  chokidar.watch([appServer, appShared], { ignored: /(^|[/\\])\../ }).on('change', onChange);
   onChange();
 }
 
