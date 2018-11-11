@@ -28,10 +28,14 @@ As soon as you bootstrap a new project, you will have an application running wit
 Under the hood it uses Webpack, Babel, ESLint and StyleLint with a few other plugins enabling a powerful development workflow, such as server live reload with nodemon and more. All preconfigured out of the box, so that you can focus on the important stuff!
 
 ## Quick Start
-:bulb: To get up and running with your first Crana app just execute:
+:bulb: To get up and running with your first Crana app, fist install Crana globally:
 
 ```bash
 npm i -g crana
+```
+
+Initialize your app
+```bash
 crana init <projectName> [projectFolder]
 ```
 
@@ -47,45 +51,21 @@ This will fire up the frontend and the backend concurrently in development mode.
 
 ### Main Commands
 
-:star: Create a new crana project.
-```bash
-crana init <projectName> [projectFolderName]
-```
-:dizzy: Concurrently starts the frontend and the backend in development mode.
-```bash
-crana dev                                     
-```
-:satellite: Starts the webpack development server for the frontend.
-```bash
-crana dev:client                              
-```
-:bar_chart: Starts the node.js backend in development mode with live-reload.
-```bash
-crana dev:server                              
-```
-:car: Starts the node.js server for production.
-```bash
-crana start                                   
-```
-:blue_car: Creates a production build for the frontend application.
-```bash
-crana build:client                            
-```
+| Command | Description |
+| --- | --- |
+| :star: crana init <projectName> [projectFolderName] | Create a new crana project |
+| :dizzy: crana dev | Concurrently starts the frontend and the backend in development mode |
+| :satellite: crana dev:client | Starts the webpack development server for the frontend |
+| :bar_chart: crana dev:server | Starts the node.js backend in development mode with live-reload |
+| :blue_car: crana build:client | Creates a production build for the frontend application |
 
 ### Util Commands
 
-:mag: Executes eslint and styleling in autofix mode for your client files (src/client + src/shared).
-```bash
-crana lint:client                             
-```
-:mag: Executes eslint in autofix mode for your server files (src/server + src/shared).
-```bash
-crana lint:server                             
-```
-:books: See how many LOC you've already written.
-```bash
-crana count-lines                            
-```
+| Command | Description |
+| --- | --- |
+| :mag: crana lint:client | Executes eslint and styleling in autofix mode for your client files (src/client + src/shared) |
+| :mag: crana lint:server | Executes eslint in autofix mode for your server files (src/server + src/shared) |
+| :books: crana count-lines | See how many LOC you've already written |
 
 ## Project structure
 The interesting files for you are all located in the __src__ folder. The src folder has three subfolders:
