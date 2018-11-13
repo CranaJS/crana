@@ -10,7 +10,14 @@ const {
 /* eslint-disable-next-line import/no-dynamic-require */
 const packageJSON = require(path.join(PATHS.root, 'package.json'));
 
-const { proxy, displayName, openBrowser } = packageJSON.crana;
+const {
+  proxy,
+  displayName,
+  openBrowser,
+  webpackDevServer
+} = packageJSON.crana;
+
+const { host, https } = webpackDevServer || {};
 
 module.exports = function create() {
   const DEV_CONFIG = {
@@ -21,6 +28,8 @@ module.exports = function create() {
       historyApiFallback: true,
       quiet: true,
       hot: true,
+      host,
+      https,
       open: (openBrowser === false) ? false : (openBrowser || 'chrome'),
       proxy
     },

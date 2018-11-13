@@ -57,6 +57,7 @@ module.exports = function createConfig({ target, mode }) {
   if (!targetObj)
     throw new Error(`Target "${target}" does not exist!`);
   const configuration = targetObj[mode];
+
   if (!configuration)
     throw new Error(`Mode "${mode}" for target "${target}" does not exist!`);
 

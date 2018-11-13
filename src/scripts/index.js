@@ -47,9 +47,9 @@ function devClient() {
       ADD_CONFIGS: JSON.stringify(getConfigurationsToAdd()) // Extensions
     },
     `npx webpack-dev-server
-    --config ${packageRootPath}/src/config/webpack/webpack.main.js
-    --env.target browser
-    --env.mode development`
+      --config ${packageRootPath}/src/config/webpack/webpack.main.js
+      --env.target browser
+      --env.mode development`
   );
   execCmd(cmd, { async: true });
 }
@@ -122,18 +122,18 @@ function dev() {
 }
 
 function buildClient() {
-  const cmd = `
-        npx cross-env
-            BABEL_ENV=browser
-            npx cross-env
-              APP_ROOT=${appRootPath}
-                npx cross-env
-                  APP_IT_ROOT=${packageRootPath}
-                    npx webpack
-                        --config ${packageRootPath}/src/config/webpack/webpack.main.js
-                        --env.target browser
-                        --env.mode production
-    `;
+  const cmd = createEnvCmd(
+    {
+      BABEL_ENV: 'browser',
+      APP_ROOT: appRootPath,
+      APP_IT_ROOT: packageRootPath,
+      ADD_CONFIGS: JSON.stringify(getConfigurationsToAdd()) // Extensions
+    },
+    `npx webpack
+      --config ${packageRootPath}/src/config/webpack/webpack.main.js
+      --env.target browser
+      --env.mode production`
+  );
   execCmd(cmd, { async: true });
 }
 
@@ -152,10 +152,10 @@ function start() {
   const { startProd } = getAllServerCommands();
   if (startProd.length === 0) {
     const cmd = `node ${appServer}/start-server.js`;
-    execCmd(cmd, { async: true });
+    execCmd(cmd, { async: true, cwd: appRootPath });
   } else {
     startProd.forEach((prodCmd) => {
-      execCmd(`npx ${prodCmd}`, { async: true });
+      execCmd(`npx ${prodCmd}`, { async: true, cwd: appRootPath });
     });
   }
 }

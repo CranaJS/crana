@@ -2,6 +2,7 @@
 /* eslint-disable import/no-dynamic-require */
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const StyleLintPlugin = require('stylelint-webpack-plugin');
+// const CopyWebpackPlugin = require('copy-webpack-plugin');
 const path = require('path');
 const mergeBabelConfigs = require('babel-merge');
 const { PATHS } = require('../webpack.util.js');
@@ -43,7 +44,7 @@ module.exports = function create({ additionalBabelConfigs }) {
         context: PATHS.client.app,
         files: '**/*.css',
         fix: true
-      })
+      }),
     ],
     module: {
       rules: [
