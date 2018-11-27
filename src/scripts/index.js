@@ -11,8 +11,8 @@ function countLines() {
 
 function lintClient() {
   // Execute linting in parallel
-  execCmd(`npx eslint ${appClient}/**/*.js* --fix --config ${packageRootPath}/.eslintrc`, { async: true });
-  execCmd(`npx eslint ${appShared}/**/*.js* --fix --config ${packageRootPath}/.eslintrc`, { async: true });
+  execCmd(`npx eslint ${appClient}/** --fix --config ${packageRootPath}/.eslintrc`, { async: true });
+  execCmd(`npx eslint ${appShared}/** --fix --config ${packageRootPath}/.eslintrc`, { async: true });
   execCmd(`npx stylelint ${appClient}/**/*.css --fix --config ${packageRootPath}/.stylelintrc`, { async: true });
   execCmd(`npx stylelint ${appShared}/**/*.css --fix --config ${packageRootPath}/.stylelintrc`, { async: true });
 }
@@ -36,8 +36,8 @@ function devClient() {
 }
 
 function lintServer() {
-  execCmd(`npx eslint ${appServer} --fix`, { async: true });
-  execCmd(`npx eslint ${appShared} --fix`, { async: true });
+  execCmd(`npx eslint ${appServer}/** --fix --config ${packageRootPath}/.eslintrc`, { async: true });
+  execCmd(`npx eslint ${appShared}/** --fix --config ${packageRootPath}/.eslintrc`, { async: true });
 }
 
 function devServer() {
