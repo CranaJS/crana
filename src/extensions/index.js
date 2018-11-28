@@ -1,16 +1,25 @@
 /* eslint-disable global-require */
 /* eslint-disable import/no-dynamic-require */
 const path = require('path');
+const fs = require('fs');
 const deepmerge = require('deepmerge');
+
 const {
   appRootPath,
   packageRootPath,
   appServer,
   appShared
 } = require('../paths');
-const fs = require('fs');
 
-const { installIfNotExists, fileExists, getProperty } = require('../util');
+const { findExtension } = require('./ls');
+
+const {
+  installIfNotExists,
+  fileExists,
+  getProperty,
+  copyDir,
+  execCmd
+} = require('../util');
 /*
 {
   name,
@@ -44,7 +53,7 @@ function setupExtension(extension) {
   //    dynamically in the scope of Crana
 
   function getPath(val) {
-    return val ? path.resolve(appRootPath, val) : null;
+    return val ? path.resolve(extension.path ? extension.path : appRootPath, val) : null;
   }
 
   const babel = getProperty(extension, 'client.babel', null);
@@ -69,7 +78,7 @@ function setupExtension(extension) {
   const mergedEslintConfig = deepmerge.all([
     eslintStandardConfig,
     ...extensions
-      .map(ext => ext.eslint ? require(ext.eslint) : null)
+      .map(ext => ext.eslint ? require(getPath(ext.eslint)) : null)
       .filter(config => config)
   ]);
 
@@ -139,17 +148,97 @@ function getAllServerCommands() {
   };
 }
 
-async function initLocalExtension() {
-  // If in the root of the project a 'crana.extend.js' file exists, install it as an extension
-  const filePath = path.resolve(appRootPath, 'crana.extend.js');
+async function setupTemplate(extensionObjs) {
+  // This function only has an effect once
+  // As long as the '.defaulttemplate' file exists in the root of the project
+  // It will delete this file if present and setup template according to extensions
+
+  // Attention: If multiple extensions expose a template for the same folder
+  //        the last one will "win"
+
+  const defaultTemplateCheckFilePath = path.join(appRootPath, '.defaulttemplate');
+  if (!await fileExists(defaultTemplateCheckFilePath))
+    return;
+
+  // Copy all template files for server, client and shared where present in extensions
+  const {
+    client,
+    server,
+    shared,
+    dependencies: dependenciesToInstall
+  } = extensionObjs.reduce((acc, extension) => {
+    if (!extension.template)
+      return acc;
+
+    let templateFolderPath;
+    let dependencies = {};
+    if (Array.isArray(extension.template))
+      [templateFolderPath, { dependencies }] = extension.template;
+    else
+      templateFolderPath = extension.template;
+
+    const possibleClientFolderPath = path.join(extension.path, templateFolderPath, 'client');
+    const possibleSharedFolderPath = path.join(extension.path, templateFolderPath, 'shared');
+    const possibleServerFolderPath = path.join(extension.path, templateFolderPath, 'server');
+
+    return {
+      client: fs.existsSync(possibleClientFolderPath) ? possibleClientFolderPath : null,
+      server: fs.existsSync(possibleServerFolderPath) ? possibleServerFolderPath : null,
+      shared: fs.existsSync(possibleSharedFolderPath) ? possibleSharedFolderPath : null,
+      dependencies: { ...acc.dependencies, ...dependencies }
+    };
+  }, {
+    client: null, server: null, shared: null, dependencies: {}
+  });
+
+  console.log([client, server, shared]);
+
+  const copyPromises = [client, server, shared]
+    .map((folderPath) => {
+      if (folderPath) {
+        const destination = path.join(appRootPath, 'src', path.basename(folderPath));
+        return copyDir({ source: folderPath, destination });
+      }
+      return null;
+    });
+
+  await Promise.all(copyPromises);
+
+  // For each applied template, install dependencies locally in project
+  const dependenciesInCorrectFormat = Object.keys(dependenciesToInstall)
+    .map((dependency) => {
+      const version = dependenciesToInstall[dependency];
+      return `${dependency}@${version}`;
+    })
+    .join(' ');
+
+  execCmd(`npm i -S ${dependenciesInCorrectFormat}`, { cwd: appRootPath, async: false });
+
+  // Delete check file
+  fs.unlinkSync(defaultTemplateCheckFilePath);
+}
+
+async function setupExtensions() {
+  // Read config from project's crana.config.js
+  const filePath = path.resolve(appRootPath, 'crana.config.js');
   const exists = await fileExists(filePath);
   if (!exists)
     return;
-  const localExtension = require(filePath);
-  setupExtension(localExtension);
+
+  const { extensions: extensionsInConfig, extend } = require(filePath);
+
+  const extensionObjs = extensionsInConfig
+    .map(extName => findExtension(extName))
+    .concat(extend);
+
+  // Setup template
+  setupTemplate(extensionObjs);
+
+  // Setup all extensions now
+  extensionObjs.forEach(extObj => setupExtension(extObj));
 }
 
-initLocalExtension();
+setupExtensions();
 
 module.exports = {
   setupExtension,
