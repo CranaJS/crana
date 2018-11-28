@@ -191,8 +191,6 @@ async function setupTemplate(extensionObjs) {
     client: null, server: null, shared: null, dependencies: {}
   });
 
-  console.log([client, server, shared]);
-
   const copyPromises = [client, server, shared]
     .map((folderPath) => {
       if (folderPath) {
@@ -232,16 +230,14 @@ async function setupExtensions() {
     .concat(extend);
 
   // Setup template
-  setupTemplate(extensionObjs);
+  await setupTemplate(extensionObjs);
 
   // Setup all extensions now
   extensionObjs.forEach(extObj => setupExtension(extObj));
 }
 
-setupExtensions();
-
 module.exports = {
-  setupExtension,
+  setupExtensions,
   extensions,
   getConfigurationsToAdd,
   getAllServerCommands

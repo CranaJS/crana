@@ -28,6 +28,7 @@
     "babel-polyfill": "^6.26.0",
     "braces": "^2.3.2",
     "chokidar": "^2.0.4",
+    "clean-webpack-plugin": "^1.0.0",
     "cloc": "^2.3.3",
     "co": "^4.6.0",
     "commander": "^2.15.1",

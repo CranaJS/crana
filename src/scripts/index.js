@@ -9,7 +9,7 @@ const {
   appRootPath, appShared, appClient, packageRootPath, appServer
 } = require('../paths');
 
-const { getConfigurationsToAdd, getAllServerCommands } = require('../extensions');
+const { getConfigurationsToAdd, getAllServerCommands, setupExtensions } = require('../extensions');
 
 const readSubdirs = promisify(subdirsCb);
 
@@ -224,6 +224,9 @@ async function preHook() {
   const packageJSON = require(packageJSONpath);
   if (!packageJSON.crana)
     return { error };
+
+  // Explicitly setup extensions
+  await setupExtensions();
   return { success: true };
 }
 

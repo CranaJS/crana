@@ -43,7 +43,7 @@ async function create({ projectName, projectFolderName }) {
 
   // Setup VSCode config
   const vscodeConfigTemplate = fs.readFileSync(path.resolve(__dirname, './templates/settings.template.json'));
-  const vscodeConfig = replaceAll(vscodeConfigTemplate.toString(), '{-- eslintrcPath --}', path.join(packageRootPath, '.eslintrc'));
+  const vscodeConfig = replaceAll(vscodeConfigTemplate.toString(), '{-- eslintrcPath --}', path.join(packageRootPath, '.eslintrctemp'));
 
   const vscodeFolder = path.join(pathToUse, '.vscode');
   if (!fs.existsSync(vscodeFolder))
