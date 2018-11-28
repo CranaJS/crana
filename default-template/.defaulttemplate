@@ -1,0 +1,3 @@
+If this file is present, crana knows that this is the default template.
+This file is deleted when a crana command is first issued (so the extensions are set up for the first time).
+This means that the template of an extension gets pasted just once.

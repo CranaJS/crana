@@ -1,23 +1,47 @@
 const path = require('path');
 const fs = require('fs');
 const childProcess = require('child_process');
+const inquirer = require('inquirer');
 
 const { copyDir, replaceAll, colorize } = require('./util');
 const { packageRootPath } = require('./paths');
+const getExtensionsList = require('./extensions/ls');
 
 async function create({ projectName, projectFolderName }) {
   const folderNameToUse = projectFolderName || projectName;
   const pathToUse = path.resolve(process.cwd(), folderNameToUse);
   console.log(`Creating project ${colorize(projectName).FgCyan()} in ${colorize(pathToUse).FgCyan()}...`);
 
+  // Create packageJSON content
   const packageJSONTemplate = fs.readFileSync(path.resolve(__dirname, './templates/package.template.json'));
   const packageJSON = replaceAll(packageJSONTemplate.toString(), '{-- project-name --}', projectName);
-
-  await copyDir({ source: path.resolve(__dirname, '..', 'template'), destination: pathToUse });
+  // Copy default template directory to project folder
+  await copyDir({ source: path.resolve(__dirname, '..', 'default-template'), destination: pathToUse });
 
   // Create real package.json
   fs.writeFileSync(path.join(pathToUse, 'package.json'), packageJSON);
 
+  // Let user select extensions
+  const extensions = getExtensionsList();
+  const { extensions: extensionsToInstall } = await inquirer.prompt([
+    {
+      type: 'checkbox',
+      name: 'extensions',
+      message: 'Which extensions do you want to install?',
+      choices: extensions.map(ext => ext.extension.name)
+    }
+  ]);
+  // Create crana.config.js in project folder with extensions listed
+  const cranaConfigContent = `
+    module.exports = {
+      extensions: ${JSON.stringify(extensionsToInstall)},
+      extend: {}
+    }
+  `;
+
+  fs.writeFileSync(path.join(pathToUse, 'crana.config.js'), cranaConfigContent);
+
+  // Setup VSCode config
   const vscodeConfigTemplate = fs.readFileSync(path.resolve(__dirname, './templates/settings.template.json'));
   const vscodeConfig = replaceAll(vscodeConfigTemplate.toString(), '{-- eslintrcPath --}', path.join(packageRootPath, '.eslintrc'));
 
