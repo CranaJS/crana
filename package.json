@@ -1,7 +1,7 @@
 {
   "name": "crana",
-  "version": "0.0.10",
-  "description": "",
+  "version": "0.0.13",
+  "description": "A CLI tool to create frontend + backend JS apps with different stacks with one command.",
   "preferGlobal": true,
   "bin": "./index.js",
   "main": "index.js",
