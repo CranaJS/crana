@@ -159,7 +159,7 @@ function installIfNotExists(packageName, version) {
   ); */
   let isPackageInstalled = false;
   try {
-    require(packageName);
+    require.resolve(packageName);
     isPackageInstalled = true;
   } catch (e) {
     isPackageInstalled = false;
