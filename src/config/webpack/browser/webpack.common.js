@@ -25,7 +25,7 @@ module.exports = function create({ additionalBabelConfigs }) {
   return {
     entry: ['babel-polyfill', path.join(PATHS.client.app, 'index.js')],
     resolve: {
-      extensions: ['.web.js', '.mjs', '.js', '.json', '.web.jsx', '.jsx'],
+      extensions: ['.web.js', '.mjs', '.js', '.json', '.web.jsx', '.jsx', '.ts', '.tsx'],
       alias: aliasObj
     },
     output: {
@@ -49,7 +49,7 @@ module.exports = function create({ additionalBabelConfigs }) {
     module: {
       rules: [
         {
-          test: [/\.js$/, /\.jsx$/],
+          test: [/\.js$/, /\.jsx$/, /\.ts$/, /\.tsx$/],
           use: {
             loader: 'babel-loader',
             options: babelConfig

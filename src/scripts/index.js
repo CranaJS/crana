@@ -89,17 +89,20 @@ function devServer() {
     else {
       startDev.forEach((startDevCmd) => {
         let cmdStr = startDevCmd;
-        let cwd = null;
+        let cwd = packageRootPath;
         if (startDevCmd.cmd) {
           cmdStr = startDevCmd.cmd;
           if (startDevCmd.cwd === 'app')
             cwd = appRootPath;
         }
         const cmdToExecute = createEnvCmd({ CRANA_MODE: 'development', BABEL_ENV: 'node' }, `npx ${cmdStr}`);
-        const shouldExec = startDevCmd.liveReload !== undefined &&
+        // Only execute of live reload wasn't set to false and command wasn't executed at least once
+        const shouldExec = !(
+          startDevCmd.liveReload !== undefined &&
           startDevCmd.liveReload !== null &&
           startDevCmd.liveReload === false &&
-          !startDevCmd.wasExecuted;
+          startDevCmd.wasExecuted
+        );
 
         if (shouldExec) {
           /* eslint-disable-next-line no-param-reassign */

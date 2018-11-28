@@ -2,6 +2,7 @@
 /* eslint-disable import/no-dynamic-require */
 const path = require('path');
 const fs = require('fs');
+const del = require('del');
 const deepmerge = require('deepmerge');
 
 const {
@@ -182,9 +183,9 @@ async function setupTemplate(extensionObjs) {
     const possibleServerFolderPath = path.join(extension.path, templateFolderPath, 'server');
 
     return {
-      client: fs.existsSync(possibleClientFolderPath) ? possibleClientFolderPath : null,
-      server: fs.existsSync(possibleServerFolderPath) ? possibleServerFolderPath : null,
-      shared: fs.existsSync(possibleSharedFolderPath) ? possibleSharedFolderPath : null,
+      client: fs.existsSync(possibleClientFolderPath) ? possibleClientFolderPath : acc.client,
+      server: fs.existsSync(possibleServerFolderPath) ? possibleServerFolderPath : acc.server,
+      shared: fs.existsSync(possibleSharedFolderPath) ? possibleSharedFolderPath : acc.shared,
       dependencies: { ...acc.dependencies, ...dependencies }
     };
   }, {
@@ -195,6 +196,8 @@ async function setupTemplate(extensionObjs) {
     .map((folderPath) => {
       if (folderPath) {
         const destination = path.join(appRootPath, 'src', path.basename(folderPath));
+        // First delete existing folder's content
+        del.sync([destination]);
         return copyDir({ source: folderPath, destination });
       }
       return null;

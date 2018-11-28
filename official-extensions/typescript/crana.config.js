@@ -1,27 +1,26 @@
 module.exports = {
   name: "typescript",
   tags: ["backend", "frontend"],
-  eslint: './eslint.config.json',
   client: {
-    webpack: {
-      dev: './webpack.dev.js',
-      common: './webpack.common.js',
-      prod: './webpack.prod.js'
-    },
     babel: './babel.config.json',
   },
+  server: {
+    startDev: ({ appServer: mainPath }) => `ts-node ${mainPath}/start-server.ts`,
+    build: ({ appServer: mainPath, appRootPath: root }) => `tsc ${mainPath}/** --outDir ${root}/build/server`,
+    startProd: ({ appRootPath: root }) => `node ${root}/build/server/start-server.js`
+  },
   dependencies: {
-    "eslint-plugin-react": "^7.4.0",
-    "react-hot-loader": "^4.3.11",
-    "@babel/preset-react": "^7.0.0"
+    "ts-node": "^7.0.1",
+    "typescript": "^3.1.6",
+    "@babel/preset-typescript": "^7.0.1"
   },
   template: [
     "./template/",
     {
       dependencies: {
-        "react": "^16.6.3",
-        "react-dom": "^16.6.3",
-        "react-hot-loader": "^4.3.11"
+        "@types/node": "^10.12.10",
+        "@types/react": "^16.7.7",
+        "@types/react-dom": "^16.0.11"
       }
     }
   ]
