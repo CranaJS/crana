@@ -1,6 +1,6 @@
 module.exports = {
-  name: "typescript",
-  tags: ["backend", "frontend"],
+  name: 'typescript',
+  tags: ['backend', 'frontend'],
   client: {
     babel: './babel.config.json',
   },
@@ -10,17 +10,17 @@ module.exports = {
     startProd: ({ appRootPath: root }) => `node ${root}/build/server/start-server.js`
   },
   dependencies: {
-    "ts-node": "^7.0.1",
-    "typescript": "^3.1.6",
-    "@babel/preset-typescript": "^7.0.1"
+    'ts-node': '^7.0.1',
+    typescript: '^3.1.6',
+    '@babel/preset-typescript': '^7.0.1'
   },
   template: [
-    "./template/",
+    './template/',
     {
       dependencies: {
-        "@types/node": "^10.12.10",
-        "@types/react": "^16.7.7",
-        "@types/react-dom": "^16.0.11"
+        '@types/node': '^10.12.10',
+        '@types/react': '^16.7.7',
+        '@types/react-dom': '^16.0.11'
       }
     }
   ]
