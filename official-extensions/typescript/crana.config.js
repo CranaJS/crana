@@ -1,6 +1,7 @@
 module.exports = {
   name: 'typescript',
   tags: ['backend', 'frontend'],
+  eslint: './eslint.config.json',
   client: {
     babel: './babel.config.json',
   },
@@ -11,8 +12,9 @@ module.exports = {
   },
   dependencies: {
     'ts-node': '^7.0.1',
-    typescript: '^3.1.6',
-    '@babel/preset-typescript': '^7.0.1'
+    typescript: '3.1.1',
+    '@babel/preset-typescript': '^7.0.1',
+    'typescript-eslint-parser': '^21.0.2',
   },
   template: [
     './template/',

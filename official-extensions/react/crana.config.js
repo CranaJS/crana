@@ -3,11 +3,6 @@ module.exports = {
   tags: ['frontend'],
   eslint: './eslint.config.json',
   client: {
-    webpack: {
-      dev: './webpack.dev.js',
-      common: './webpack.common.js',
-      prod: './webpack.prod.js'
-    },
     babel: './babel.config.json',
   },
   dependencies: {

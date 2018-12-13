@@ -45,13 +45,13 @@ function createAnalyzer(dev = true) {
   });
 }
 
-function createLinter(dev = true) {
+function createLinter() {
   return {
     test: [/\.js$/, /\.jsx$/],
     enforce: 'pre',
     loader: 'eslint-loader',
     options: {
-      fix: !dev,
+      fix: true,
       configFile: path.join(packageRootPath, '.eslintrctemp')
     },
     include: [PATHS.client.app, PATHS.shared]

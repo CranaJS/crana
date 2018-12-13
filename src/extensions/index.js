@@ -165,16 +165,14 @@ async function setupTemplate(extensionObjs) {
   const {
     client,
     server,
-    shared,
-    dependencies: dependenciesToInstall
+    shared
   } = extensionObjs.reduce((acc, extension) => {
     if (!extension.template)
       return acc;
 
     let templateFolderPath;
-    let dependencies = {};
     if (Array.isArray(extension.template))
-      [templateFolderPath, { dependencies }] = extension.template;
+      [templateFolderPath] = extension.template;
     else
       templateFolderPath = extension.template;
 
@@ -185,11 +183,10 @@ async function setupTemplate(extensionObjs) {
     return {
       client: fs.existsSync(possibleClientFolderPath) ? possibleClientFolderPath : acc.client,
       server: fs.existsSync(possibleServerFolderPath) ? possibleServerFolderPath : acc.server,
-      shared: fs.existsSync(possibleSharedFolderPath) ? possibleSharedFolderPath : acc.shared,
-      dependencies: { ...acc.dependencies, ...dependencies }
+      shared: fs.existsSync(possibleSharedFolderPath) ? possibleSharedFolderPath : acc.shared
     };
   }, {
-    client: null, server: null, shared: null, dependencies: {}
+    client: null, server: null, shared: null
   });
 
   const copyPromises = [client, server, shared]
@@ -205,18 +202,34 @@ async function setupTemplate(extensionObjs) {
 
   await Promise.all(copyPromises);
 
+  // Delete check file
+  fs.unlinkSync(defaultTemplateCheckFilePath);
+}
+
+function installTemplateDependencies(extensionObjs) {
+  const dependenciesToInstall = extensionObjs.reduce((acc, extension) => {
+    let dependencies = {};
+    if (Array.isArray(extension.template))
+      [, { dependencies }] = extension.template;
+    if (!extension.template)
+      return acc;
+    return { ...acc.dependencies, ...dependencies };
+  });
+
   // For each applied template, install dependencies locally in project
-  const dependenciesInCorrectFormat = Object.keys(dependenciesToInstall)
+  // if not listed in package.json yet
+  const { dependencies: installedDeps } = require(path.join(appRootPath, 'package.json'));
+  const dependenciesNotInstalledYet = Object.keys(dependenciesToInstall)
+    .filter(dep => !Object.keys(installedDeps).includes(dep));
+  const dependenciesInCorrectFormat = dependenciesNotInstalledYet
     .map((dependency) => {
       const version = dependenciesToInstall[dependency];
       return `${dependency}@${version}`;
     })
     .join(' ');
 
-  execCmd(`npm i -S ${dependenciesInCorrectFormat}`, { cwd: appRootPath, async: false });
-
-  // Delete check file
-  fs.unlinkSync(defaultTemplateCheckFilePath);
+  if (dependenciesInCorrectFormat.length > 0)
+    execCmd(`npm i -S ${dependenciesInCorrectFormat}`, { cwd: appRootPath, async: false });
 }
 
 async function setupExtensions() {
@@ -234,6 +247,7 @@ async function setupExtensions() {
 
   // Setup template
   await setupTemplate(extensionObjs);
+  await installTemplateDependencies(extensionObjs);
 
   // Setup all extensions now
   extensionObjs.forEach(extObj => setupExtension(extObj));

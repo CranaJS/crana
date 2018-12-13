@@ -49,7 +49,7 @@ module.exports = function create({ additionalBabelConfigs }) {
     module: {
       rules: [
         {
-          test: [/\.js$/, /\.jsx$/, /\.ts$/, /\.tsx$/],
+          test: [/\.js$/, /\.jsx$/, /\.tsx?$/],
           use: {
             loader: 'babel-loader',
             options: babelConfig
