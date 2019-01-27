@@ -54,7 +54,7 @@ This will fire up the frontend and the backend concurrently in development mode.
 | Command | Description |
 | --- | --- |
 | crana -V | Outputs crana's version |
-| crana -h | Show availavle commands |
+| crana -h | Show available commands |
 
 ### Main Commands
 
